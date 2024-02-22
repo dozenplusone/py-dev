@@ -17,9 +17,15 @@ parser.add_argument("-f", help="specify cow picture file (built-in or custom)",
 # Showing cows list
 parser.add_argument("-l", action="store_true",
                     help="show list of built-in cow files and exit")
+# Toggling off text wrapping
+parser.add_argument("-n", action="store_false", help="disable text wrapping")
 # Parsing tongue
 parser.add_argument("-T", default='',
                     help="specify tongue appearance", metavar="tongue")
+# Parsing text width
+parser.add_argument("-W", default=40, type=int,
+                    help="set text width (40 by default)",
+                    metavar="wrapcolumn")
 
 args = parser.parse_args()
 avail = sorted(cowsay.list_cows())
@@ -34,7 +40,9 @@ elif args.f is None:
         "Hello world!",
         preset=preset,
         eyes=args.e,
-        tongue=args.T
+        tongue=args.T,
+        width=args.W,
+        wrap_text=args.n
     ))
 elif args.f in avail:
     # cow file is built-in
@@ -43,7 +51,9 @@ elif args.f in avail:
         cow=args.f,
         preset=preset,
         eyes=args.e,
-        tongue=args.T
+        tongue=args.T,
+        width=args.W,
+        wrap_text=args.n
     ))
 else:
     # cow file is custom *.cow
@@ -54,5 +64,7 @@ else:
         preset=preset,
         eyes=args.e,
         tongue=args.T,
+        width=args.W,
+        wrap_text=args.n,
         cowfile=cowfile
     ))
