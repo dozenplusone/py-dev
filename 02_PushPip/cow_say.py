@@ -1,5 +1,6 @@
 import argparse
 import cowsay
+import sys
 
 
 parser = argparse.ArgumentParser()
@@ -26,9 +27,14 @@ parser.add_argument("-T", default='',
 parser.add_argument("-W", default=40, type=int,
                     help="set text width (40 by default)",
                     metavar="wrapcolumn")
+# Parsing message
+parser.add_argument("message", nargs='*',
+                    help="to be said; read from stdin if not provided")
 
 args = parser.parse_args()
 avail = sorted(cowsay.list_cows())
+message = (' '.join(args.message) if args.message
+           else sys.stdin.read() if not args.l else None)
 preset = ''.join(p for p in "bdgpstwy" if getattr(args, p))
 
 if args.l:
@@ -37,7 +43,7 @@ if args.l:
 elif args.f is None:
     # cow file not specified
     print(cowsay.cowsay(
-        "Hello world!",
+        message=message,
         preset=preset,
         eyes=args.e,
         tongue=args.T,
@@ -47,7 +53,7 @@ elif args.f is None:
 elif args.f in avail:
     # cow file is built-in
     print(cowsay.cowsay(
-        "Hello world!",
+        message=message,
         cow=args.f,
         preset=preset,
         eyes=args.e,
@@ -60,7 +66,7 @@ else:
     with open(args.f) as f:
         cowfile = cowsay.read_dot_cow(f)
     print(cowsay.cowsay(
-        "Hello world!",
+        message=message,
         preset=preset,
         eyes=args.e,
         tongue=args.T,
