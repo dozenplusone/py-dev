@@ -21,7 +21,7 @@ parser.add_argument("-l", action="store_true",
 # Toggling off text wrapping
 parser.add_argument("-n", action="store_false", help="disable text wrapping")
 # Parsing tongue
-parser.add_argument("-T", default='',
+parser.add_argument("-T", default="  ",
                     help="specify tongue appearance", metavar="tongue")
 # Parsing text width
 parser.add_argument("-W", default=40, type=int,
