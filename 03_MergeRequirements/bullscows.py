@@ -5,8 +5,9 @@ import urllib.request
 
 
 def cowinput(prompt: str) -> str:
-    cow = random.choice(cowsay.list_cows())
-    print(cowsay.cowsay(prompt, cow=cow))
+    with open("mycat.cow") as f:
+        cow = cowsay.read_dot_cow(f)
+    print(cowsay.cowsay(prompt, cowfile=cow))
     return input()
 
 
