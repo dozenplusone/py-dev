@@ -47,3 +47,5 @@ except Exception:
 length = int(sys.argv[2]) if len(sys.argv) > 2 else 5
 words = [s for s in src.read().decode().split() if len(s) == length]
 src.close()
+
+print("Попыток:", gameplay(ask, inform, words))
