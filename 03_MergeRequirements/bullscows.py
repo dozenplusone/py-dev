@@ -1,4 +1,6 @@
 import random
+import sys
+import urllib.request
 
 
 def bullscows(guess: str, secret: str) -> tuple[int, int]:
@@ -31,3 +33,17 @@ def gameplay(ask: callable, inform: callable, words: list[str]) -> int:
         ctr += 1
     inform("Быки: {}, Коровы: {}", *bullscows(guess, secret))
     return ctr
+
+
+if len(sys.argv) < 2:
+    print("Нет словаря!")
+    sys.exit(1)
+
+try:
+    src = urllib.request.urlopen(sys.argv[1])
+except Exception:
+    src = open(sys.argv[1], "rb")
+
+length = int(sys.argv[2]) if len(sys.argv) > 2 else 5
+words = [s for s in src.read().decode().split() if len(s) == length]
+src.close()
