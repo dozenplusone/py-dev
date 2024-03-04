@@ -1,6 +1,13 @@
+import cowsay
 import random
 import sys
 import urllib.request
+
+
+def cowinput(prompt: str) -> str:
+    cow = random.choice(cowsay.list_cows())
+    print(cowsay.cowsay(prompt, cow=cow))
+    return input()
 
 
 def bullscows(guess: str, secret: str) -> tuple[int, int]:
