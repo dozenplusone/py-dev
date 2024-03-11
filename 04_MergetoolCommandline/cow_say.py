@@ -41,6 +41,8 @@ class CowShell(cmd.Cmd):
             return [e for e in self.__class__.__eyes if e.startswith(text)]
         elif last == "tongue":
             return [t for t in self.__class__.__tongue if t.startswith(text)]
+        elif last == "cow":
+            return [c for c in cowsay.list_cows() if c.startswith(text)]
         else:
             return [p for p in self.__class__.__params if p.startswith(text)]
 
