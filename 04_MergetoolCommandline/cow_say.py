@@ -12,6 +12,7 @@ def parseArgs(s):
 class CowShell(cmd.Cmd):
     __eyes = "==", "XX", "$$", "@@", "**", "--", "OO", "..", "bd"
     __tongue = "\"U \"", "\"\\/\"", "\" V\""
+    __params = "message", "eyes", "tongue", "cow"
 
     def do_list_cows(self, arg):
         """list_cows
@@ -40,6 +41,8 @@ class CowShell(cmd.Cmd):
             return [e for e in self.__class__.__eyes if e.startswith(text)]
         elif last == "tongue":
             return [t for t in self.__class__.__tongue if t.startswith(text)]
+        else:
+            return [p for p in self.__class__.__params if p.startswith(text)]
 
     complete_cowthink = complete_cowsay
 
