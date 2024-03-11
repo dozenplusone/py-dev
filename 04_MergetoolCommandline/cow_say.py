@@ -37,6 +37,16 @@ class CowShell(cmd.Cmd):
         Same as cowsay (see: help cowsay), but with different bubble style."""
         print(cowsay.cowthink(**parseArgs(arg)))
 
+    def do_exit(self, arg):
+        """exit
+        Close the program."""
+        return True
+
+    def do_EOF(self, arg):
+        """Send EOF (Unix: Ctrl-D) to close the program."""
+        print()
+        return True
+
     def complete_make_bubble(self, text, line, begidx, endidx):
         if "text".startswith(text):
             return ["text"]
