@@ -14,6 +14,8 @@ class CowShell(cmd.Cmd):
         print("Built-in cow files:")
         print(*sorted(cowsay.list_cows()))
 
+    def do_make_bubble(self, arg):
+        print(cowsay.make_bubble(**parseArgs(arg)))
 
 if __name__ == '__main__':
     CowShell().cmdloop()
