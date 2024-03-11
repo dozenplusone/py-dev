@@ -17,5 +17,11 @@ class CowShell(cmd.Cmd):
     def do_make_bubble(self, arg):
         print(cowsay.make_bubble(**parseArgs(arg)))
 
+    def do_cowsay(self, arg):
+        print(cowsay.cowsay(**parseArgs(arg)))
+
+    def do_cowthink(self, arg):
+        print(cowsay.cowthink(**parseArgs(arg)))
+
 if __name__ == '__main__':
     CowShell().cmdloop()
