@@ -35,6 +35,10 @@ class CowShell(cmd.Cmd):
         Same as cowsay (see: help cowsay), but with different bubble style."""
         print(cowsay.cowthink(**parseArgs(arg)))
 
+    def complete_make_bubble(self, text, line, begidx, endidx):
+        if "text".startswith(text):
+            return ["text"]
+
     def complete_cowsay(self, text, line, begidx, endidx):
         last = shlex.split(line)[-2 if text else -1]
         if last == "eyes":
