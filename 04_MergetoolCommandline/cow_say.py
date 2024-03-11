@@ -10,6 +10,8 @@ def parseArgs(s):
 
 
 class CowShell(cmd.Cmd):
+    prompt = "(cowsay) "
+
     __eyes = "==", "XX", "$$", "@@", "**", "--", "OO", "..", "bd"
     __tongue = "\"U \"", "\"\\/\"", "\" V\""
     __params = "message", "eyes", "tongue", "cow"
