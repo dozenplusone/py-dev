@@ -11,7 +11,9 @@ async def cowChat(reader, writer):
         nonlocal buffer, login
         match shlex.split(cmd):
             case ["login", _login]:
-                if _login in cowsay.list_cows() and _login not in clients:
+                if (_login in cowsay.list_cows()
+                        and _login not in clients
+                        and buffer not in clients.values()):
                     login = _login
                     clients[login] = buffer
                     await buffer.put("Login successful")
