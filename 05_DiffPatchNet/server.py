@@ -25,6 +25,18 @@ async def cowChat(reader, writer):
                 await buffer.put('\n'.join(
                     n for n in cowsay.list_cows() if n not in clients
                 ))
+            case ["say", dst, msg]:
+                if login in clients and dst in clients:
+                    await clients[dst].put(msg)
+                else:
+                    await buffer.put("Sending failed")
+            case ["yield", msg]:
+                if login in clients:
+                    for dst in clients.values():
+                        if dst is not buffer:
+                            await dst.put(msg)
+                else:
+                    await buffer.put("Sending failed")
 
     login = None
     buffer = asyncio.Queue()
