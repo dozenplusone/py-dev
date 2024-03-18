@@ -8,7 +8,7 @@ clients = {}
 
 async def cowChat(reader, writer):
     async def cmdExec(cmd: str):
-        nonlocal buffer, login
+        nonlocal buffer, login, stopped
         match shlex.split(cmd):
             case ["login", _login]:
                 if (_login in cowsay.list_cows()
@@ -37,11 +37,17 @@ async def cowChat(reader, writer):
                             await dst.put(cowsay.cowsay(msg, cow=login))
                 else:
                     await buffer.put("Sending failed")
+            case ["quit"]:
+                if login in clients:
+                    del clients[login]
+                del buffer
+                stopped = True
 
     login = None
     buffer = asyncio.Queue()
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(buffer.get())
+    stopped = False
     while not reader.at_eof():
         done, pending = await asyncio.wait(
             [send, receive],
@@ -51,10 +57,14 @@ async def cowChat(reader, writer):
             if task is send:
                 send = asyncio.create_task(reader.readline())
                 await cmdExec(task.result().decode())
+                if stopped:
+                    break
             elif task is receive:
                 receive = asyncio.create_task(buffer.get())
                 writer.write(f"{task.result()}\n".encode())
                 await writer.drain()
+        if stopped:
+            break
     send.cancel()
     receive.cancel()
     writer.close()
