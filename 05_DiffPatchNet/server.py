@@ -1,5 +1,6 @@
 import asyncio
 import cowsay
+import shlex
 
 
 clients = {}
@@ -7,9 +8,17 @@ clients = {}
 
 async def cowChat(reader, writer):
     async def cmdExec(cmd: str):
-        nonlocal buffer
-        await buffer.put(cmd)
+        nonlocal buffer, login
+        match shlex.split(cmd):
+            case ["login", _login]:
+                if _login in cowsay.list_cows() and _login not in clients:
+                    login = _login
+                    clients[login] = buffer
+                    await buffer.put("Login successful")
+                else:
+                    await buffer.put("Login failed")
 
+    login = None
     buffer = asyncio.Queue()
     send = asyncio.create_task(reader.readline())
     receive = asyncio.create_task(buffer.get())
