@@ -27,14 +27,14 @@ async def cowChat(reader, writer):
                 ))
             case ["say", dst, msg]:
                 if login in clients and dst in clients:
-                    await clients[dst].put(msg)
+                    await clients[dst].put(cowsay.cowsay(msg, cow=login))
                 else:
                     await buffer.put("Sending failed")
             case ["yield", msg]:
                 if login in clients:
                     for dst in clients.values():
                         if dst is not buffer:
-                            await dst.put(msg)
+                            await dst.put(cowsay.cowsay(msg, cow=login))
                 else:
                     await buffer.put("Sending failed")
 
