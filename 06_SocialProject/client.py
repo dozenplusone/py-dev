@@ -50,6 +50,13 @@ class ChatCmd(cmd.Cmd):
         cows = self.sockfd.recv(384).decode().split()
         return [c for c in cows if c.startswith(text)]
 
+    def complete_say(self, text, line, begidx, endidx):
+        last = shlex.split(line)[-2 if text else -1]
+        if last == "say":
+            self.sockfd.sendall(b"who\n")
+            cows = self.sockfd.recv(384).decode().split()
+            return [c for c in cows if c.startswith(text)]
+
 
 def listen(cmdline: ChatCmd):
     while cmdline.sockfd is not None:
