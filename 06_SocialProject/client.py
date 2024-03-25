@@ -1,5 +1,6 @@
 import cmd
 import readline
+import shlex
 import socket
 import threading
 
@@ -25,6 +26,14 @@ class ChatCmd(cmd.Cmd):
             print("error: 'cows' takes no arguments")
         else:
             self.sockfd.sendall(b"cows\n")
+
+    def do_say(self, arg):
+        args = shlex.split(arg)
+        self.sockfd.sendall(f"say {shlex.join(args[:2])}\n".encode())
+
+    def do_yield(self, arg):
+        args = shlex.split(arg)
+        self.sockfd.sendall(f"yield {shlex.join(args[:1])}\n".encode())
 
 
 def listen(cmdline: ChatCmd):
