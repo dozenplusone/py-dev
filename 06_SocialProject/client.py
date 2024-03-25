@@ -11,6 +11,8 @@ class ChatCmd(cmd.Cmd):
     def __init__(self, sockfd: socket.socket):
         super().__init__()
         self.sockfd = sockfd
+        self.listening = threading.Event()
+        self.listening.set()
 
     def do_login(self, arg):
         self.sockfd.sendall(f"login {arg.split()[0]}\n".encode())
@@ -46,20 +48,25 @@ class ChatCmd(cmd.Cmd):
     do_EOF = do_quit
 
     def complete_login(self, text, line, begidx, endidx):
+        self.listening.clear()
         self.sockfd.sendall(b"cows\n")
         cows = self.sockfd.recv(384).decode().split()
+        self.listening.set()
         return [c for c in cows if c.startswith(text)]
 
     def complete_say(self, text, line, begidx, endidx):
         last = shlex.split(line)[-2 if text else -1]
         if last == "say":
+            self.listening.clear()
             self.sockfd.sendall(b"who\n")
             cows = self.sockfd.recv(384).decode().split()
+            self.listening.set()
             return [c for c in cows if c.startswith(text)]
 
 
 def listen(cmdline: ChatCmd):
     while cmdline.sockfd is not None:
+        cmdline.listening.wait()
         data = b''
         while len(new := cmdline.sockfd.recv(1024)) == 1024:
             data += new
@@ -73,4 +80,4 @@ with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sockfd:
     sockfd.connect(("localhost", 1337))
     cmdline = ChatCmd(sockfd)
     threading.Thread(target=listen, args=(cmdline,)).start()
-    cmdline.cmdloop()
+    threading.Thread(target=cmdline.cmdloop()).start()
