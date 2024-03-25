@@ -5,6 +5,8 @@ import threading
 
 
 class ChatCmd(cmd.Cmd):
+    prompt = ''
+
     def __init__(self, sockfd: socket.socket):
         super().__init__()
         self.sockfd = sockfd
