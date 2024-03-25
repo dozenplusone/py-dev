@@ -7,6 +7,10 @@ class ChatCmd(cmd.Cmd):
         super().__init__()
         self.sockfd = sockfd
 
+    def do_login(self, arg):
+        self.sockfd.sendall(f"login {arg.split()[0]}\n".encode())
+        print(self.sockfd.recv(1024).decode().rstrip())
+
 
 with socket.socket(socket.AF_INET, socket.SOCK_STREAM) as sockfd:
     sockfd.connect(("localhost", 1337))
