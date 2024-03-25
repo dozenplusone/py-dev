@@ -27,7 +27,11 @@ class ChatCmd(cmd.Cmd):
 
 def listen(cmdline: ChatCmd):
     while True:
-        print(f"\n{cmdline.sockfd.recv(1024).decode().rstrip()}",
+        data = b''
+        while len(new := cmdline.sockfd.recv(1024)) == 1024:
+            data += new
+        data += new
+        print(f"\n{data.decode().rstrip()}",
               f"\n{cmdline.prompt}{readline.get_line_buffer()}",
               sep='', end='', flush=True)
 
