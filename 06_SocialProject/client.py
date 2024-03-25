@@ -35,9 +35,19 @@ class ChatCmd(cmd.Cmd):
         args = shlex.split(arg)
         self.sockfd.sendall(f"yield {shlex.join(args[:1])}\n".encode())
 
+    def do_quit(self, arg):
+        if arg:
+            print("error: 'quit' takes no arguments")
+        else:
+            self.sockfd.sendall(b"quit\n")
+            self.sockfd = None
+            return True
+
+    do_EOF = do_quit
+
 
 def listen(cmdline: ChatCmd):
-    while True:
+    while cmdline.sockfd is not None:
         data = b''
         while len(new := cmdline.sockfd.recv(1024)) == 1024:
             data += new
