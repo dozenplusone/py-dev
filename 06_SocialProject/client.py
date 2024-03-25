@@ -45,6 +45,11 @@ class ChatCmd(cmd.Cmd):
 
     do_EOF = do_quit
 
+    def complete_login(self, text, line, begidx, endidx):
+        self.sockfd.sendall(b"cows\n")
+        cows = self.sockfd.recv(384).decode().split()
+        return [c for c in cows if c.startswith(text)]
+
 
 def listen(cmdline: ChatCmd):
     while cmdline.sockfd is not None:
